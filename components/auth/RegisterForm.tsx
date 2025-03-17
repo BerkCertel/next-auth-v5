@@ -2,13 +2,11 @@
 
 import React, { useState, useTransition } from "react";
 import CardWrapper from "./card-wrapper";
-import { FaUnlockAlt } from "react-icons/fa";
 import ErrorForm from "../utils/ErrorForm";
 import SuccessForm from "../utils/SuccessForm";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { useForm } from "react-hook-form";
-import { LoginSchema } from "@/app/schema";
 import {
   Form,
   FormControl,
@@ -19,29 +17,32 @@ import {
 } from "../ui/form";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
-import { login } from "@/action/login";
+import { registerSchema } from "@/app/schema";
+import { register } from "@/action/register";
+import { RiUserAddLine } from "react-icons/ri";
 
-const LoginForm = () => {
+function RegisterForm() {
   const [error, setError] = useState<string | undefined>("");
   const [success, setSuccess] = useState<string | undefined>("");
   const [isPending, startTransition] = useTransition();
 
-  const form = useForm<z.infer<typeof LoginSchema>>({
-    resolver: zodResolver(LoginSchema),
+  const form = useForm<z.infer<typeof registerSchema>>({
+    resolver: zodResolver(registerSchema),
     defaultValues: {
+      name: "",
       email: "",
       password: "",
     },
   });
 
-  const onSubmit = async (values: z.infer<typeof LoginSchema>) => {
+  const onSubmit = async (values: z.infer<typeof registerSchema>) => {
     console.log(values);
 
     setError("");
     setSuccess("");
 
     startTransition(() => {
-      login(values)
+      register(values)
         .then((data) => {
           setError(data.error);
           setSuccess(data.success);
@@ -54,16 +55,36 @@ const LoginForm = () => {
 
   return (
     <CardWrapper
-      headerLabel="Welcome"
-      backButtonLabel="Dont have an Account ?"
-      backButtonHref="/auth/register"
+      headerLabel="Create an Account"
+      backButtonLabel="Already have an account"
+      backButtonHref="/auth/login"
       ShowSocial
-      headerTitle="Auth"
-      icon={FaUnlockAlt}
+      headerTitle="Register"
+      icon={RiUserAddLine}
     >
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="grid space-y-4">
           <div className="">
+            <FormField
+              name="name"
+              control={form.control}
+              render={({ field }) => {
+                return (
+                  <FormItem>
+                    <FormLabel>Name</FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder="Enter your name"
+                        type="text"
+                        disabled={isPending}
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                );
+              }}
+            />
             <FormField
               name="email"
               control={form.control}
@@ -109,13 +130,13 @@ const LoginForm = () => {
             <SuccessForm message={success} />
 
             <Button type="submit" className=" w-full mt-2" disabled={isPending}>
-              Login
+              Register
             </Button>
           </div>
         </form>
       </Form>
     </CardWrapper>
   );
-};
+}
 
-export default LoginForm;
+export default RegisterForm;

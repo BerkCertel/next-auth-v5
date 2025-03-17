@@ -3,13 +3,16 @@ import { Card, CardContent, CardFooter, CardHeader } from "../ui/card";
 import Header from "./header";
 import BackButton from "./back-button";
 import Social from "./social";
+import { IconType } from "react-icons/lib";
 
 interface CardWrapperProps {
   children: React.ReactNode;
   headerLabel: string;
   backButtonLabel: string;
+  headerTitle: string;
   backButtonHref: string;
   ShowSocial: boolean;
+  icon: IconType;
 }
 
 function CardWrapper({
@@ -18,22 +21,24 @@ function CardWrapper({
   backButtonHref,
   backButtonLabel,
   ShowSocial = true,
+  headerTitle,
+  icon,
 }: CardWrapperProps) {
   return (
     <Card className="w-[500px] shadow-lg">
       <CardHeader>
-        <Header label={headerLabel}></Header>
+        <Header title={headerTitle} label={headerLabel} icon={icon} />
       </CardHeader>
       <CardContent>{children} </CardContent>
 
       {ShowSocial && (
         <CardFooter>
-          <Social></Social>
+          <Social />
         </CardFooter>
       )}
 
       <CardFooter>
-        <BackButton href={backButtonHref} label={backButtonLabel}></BackButton>
+        <BackButton href={backButtonHref} label={backButtonLabel} />
       </CardFooter>
     </Card>
   );
