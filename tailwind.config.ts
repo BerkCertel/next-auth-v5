@@ -58,9 +58,9 @@ export default {
         sm: "calc(var(--radius) - 4px)",
       },
       fontFamily: {
-        poppins: [],
-        pacifiko: [],
-        titi: [],
+        poppins: ["Poppins", "sans-serif"],
+        pacifiko: ["Pacifico", "cursive"],
+        titi: ["Titillium Web", "sans-serif;"],
       },
     },
   },
